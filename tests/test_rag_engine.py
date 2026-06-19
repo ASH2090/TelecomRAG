@@ -1,16 +1,18 @@
-"""Tests for the RAG engine (requires test spec PDF + GROQ_API_KEY)."""
 import os
-import pytest  
-from pathlib import Path
+import pytest
 
-# Skip all tests in this file if no API key
-pytestmark = pytest.mark.skipif(
-     not os.getenv("GROQ_API_KEY"),
-)
+GROQ_KEY_PRESENT = bool(os.getenv("GROQ_API_KEY"))
+
+
+@pytest.fixture(autouse=True)
+def skip_if_no_api_key():
+    if not GROQ_KEY_PRESENT:
+        pytest.skip("GROQ_API_KEY not set")
+
+
 def test_build_vectordb():
     from tests.create_test_spec import create_test_spec
     create_test_spec()
-
     from app.rag_engine import build_vectordb
     db = build_vectordb(force_rebuild=True)
     assert db is not None
