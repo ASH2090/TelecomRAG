@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-
+from app.spec_downloader import ensure_specs_available
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
@@ -61,6 +61,7 @@ def get_embeddings():
 
 def build_vectordb(force_rebuild: bool = False) -> Chroma:
     """Build or load the Chroma vector database."""
+    ensure_specs_available()
     embeddings = get_embeddings()
 
     if VECTORDB_DIR.exists() and not force_rebuild:
