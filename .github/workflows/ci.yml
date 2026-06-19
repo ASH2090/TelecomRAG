@@ -29,6 +29,8 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -r requirements.txt pytest fpdf2 httpx
+      - name: Create test spec PDF for API tests
+        run: python -m tests.create_test_spec
       - name: Run log parser tests
         run: pytest tests/test_log_parser.py -v
       - name: Run API tests
